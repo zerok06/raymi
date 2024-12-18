@@ -1,0 +1,52 @@
+version: '3.8'
+
+services:
+  frontend:
+    image: raymi-image
+    container_name: host-raymi-frontend
+    build:
+      context: ./frontend
+      dockerfile: ../config/frontend/dev/Dockerfile
+    ports:
+      - ${NEXT_PUBLIC_APP_PORT}:3000
+    stdin_open: true
+    tty: true
+    env_file:
+      - .env
+    networks:
+      - main
+    volumes:
+      - ./frontend:/home/app
+  backend:
+    image: raymi-image
+    container_name: host-raymi-backend
+    build:
+      context: ./backend
+      dockerfile: ../config/backend/dev/Dockerfile
+    ports:
+      - ${NODE_PORT_SERVER}:3000
+    stdin_open: true
+    tty: true
+    env_file:
+      - .env
+    networks:
+      - main
+    volumes:
+      - ./backend:/var/www/stack
+
+  database:
+    image: postgres
+    restart: always
+    shm_size: 128mb
+    volumes:
+      - type: tmpfs
+        target: /dev/shm
+        tmpfs:
+          size: 134217728 # 128*2^20 bytes = 128Mb
+    environment:
+      POSTGRES_PASSWORD: ${DATABASE_PASSWORD}
+    env_file:
+      - .env
+networks:
+  main:
+    driver: bridge
