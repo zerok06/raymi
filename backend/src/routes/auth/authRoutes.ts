@@ -32,16 +32,19 @@ router.post('/signin', validateData(signIn), async (req: Request, res: Response)
     })
 
     if (!existUser) {
-      res.json({ error: 'User not found' })
+      res.json({ msg: 'User not found', success: false })
+      return
     }
 
     if (!compareSync(password, existUser?.creadential?.password!)) {
-      res.json({ error: 'Password not correct' })
+      res.json({ msg: 'Password not correct', success: false })
+      return
     }
 
 
     if (!process.env.JWT_SECRET_KEY) {
-      res.json({ error: 'JWT_SECRET_KEY not found' })
+      res.json({ msg: 'JWT_SECRET_KEY not found', success: false })
+      return
     }
     const secret_key = createSecretKey(process.env.JWT_SECRET_KEY!, 'utf-8')
 
@@ -54,14 +57,10 @@ router.post('/signin', validateData(signIn), async (req: Request, res: Response)
     console.log(token);
 
 
-    res.cookie('token', token, {
-      httpOnly: true,
-      secure: true,
-      sameSite: 'none'
-    }).json({ token })
+    res.json({ msg: 'Sign in successfully', success: true, token })
 
   } catch (error) {
-    res.json({ error })
+    res.json({ error, success: false })
   }
 })
 
@@ -69,6 +68,7 @@ router.post('/signin', validateData(signIn), async (req: Request, res: Response)
 /* Sign up */
 
 router.post('/signup', validateData(signUp), async (req: Request, res: Response) => {
+  console.log(req.body);
 
   try {
     const { email, firstName, lastName, username, password }: signUpType = req.body
@@ -82,10 +82,10 @@ router.post('/signup', validateData(signUp), async (req: Request, res: Response)
       }
 
     })
-    console.log(exist_user);
 
     if (exist_user) {
-      res.json({ msg: 'User already exists' })
+      res.json({ msg: 'User already exists', success: false })
+      return
     }
 
     /* Cifrar password */
@@ -111,13 +111,14 @@ router.post('/signup', validateData(signUp), async (req: Request, res: Response)
       }
     })
     if (!new_user) {
-      res.json({ msg: 'User not created' })
+      res.json({ msg: 'User not created', success: false })
+      return
     }
-    res.json({ msg: 'User created' })
+    res.json({ msg: 'User created', success: true })
 
 
   } catch (error) {
-    res.json({ error })
+    res.json({ error, success: false })
   }
 
 
