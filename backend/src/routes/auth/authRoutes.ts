@@ -4,7 +4,7 @@ import { signIn, signUp } from './authSchemas'
 import type { signInType, signUpType } from './authSchemas'
 import prisma from '../../lib/prisma-client'
 import { genSaltSync, hashSync, compareSync } from 'bcryptjs'
-import { SignJWT } from 'jose'
+import { jwtVerify, SignJWT } from 'jose'
 import { createSecretKey } from 'crypto'
 
 
@@ -123,6 +123,25 @@ router.post('/signup', validateData(signUp), async (req: Request, res: Response)
 
 
 })
+
+router.post('/validate-token', async (req: Request, res: Response) => {
+  const { token } = req.body;
+
+  if (!token) {
+    res.status(400).json({ msg: 'Token is required', valid: false });
+    return
+  }
+
+  try {
+    console.log(token);
+
+    const secret = new TextEncoder().encode(process.env.JWT_SECRET_KEY!); // Reemplaza 'your-secret-key' con tu clave secreta
+    const { payload } = await jwtVerify(token.value, secret);
+    res.json({ msg: 'Token is valid', valid: true, payload });
+  } catch (error) {
+    res.status(401).json({ msg: 'Token is invalid', valid: false });
+  }
+});
 
 
 router.get('/auth', (req: Request, res: Response) => {

@@ -7,7 +7,7 @@ import type { CreateEventType, UpdateEventType } from './eventSchema'; // Define
 const router: Router = Router();
 
 /* Crear un evento */
-router.post('/events', validateData(createEventSchema), async (req: Request, res: Response) => {
+router.post('/event', validateData(createEventSchema), async (req: Request, res: Response) => {
     try {
         const {
             title,
