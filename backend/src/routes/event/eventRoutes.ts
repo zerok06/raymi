@@ -62,7 +62,7 @@ router.get('/events', async (req: Request, res: Response) => {
             },
         });
 
-        res.json(events);
+        res.json({ events });
     } catch (error) {
         console.error(error);
         res.status(500).json({ error: 'Failed to fetch events' });
@@ -88,7 +88,7 @@ router.get('/events/:id', async (req: Request, res: Response) => {
             res.status(404).json({ error: 'Event not found' });
         }
 
-        res.json(event);
+        res.json({ event });
     } catch (error) {
         console.error(error);
         res.status(500).json({ error: 'Failed to fetch event' });

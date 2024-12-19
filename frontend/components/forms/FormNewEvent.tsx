@@ -16,9 +16,12 @@ import {
 import { Input } from '@/components/ui/input'
 import { Separator } from '../ui/separator'
 import { Toaster } from '../ui/toaster'
-import { useTransition } from 'react'
+import { useState, useTransition } from 'react'
 import { createEvent } from '@/actions/eventActions'
 import { TimePicker } from '../ui/datetime-picker'
+import { MultiSelect } from '../ui/multi-select'
+import { Cat, Dog, Fish, Rabbit, Turtle } from 'lucide-react'
+import { Tag, TagInput } from 'emblor'
 
 const FormSchema = z.object({
   title: z.string().min(1, 'Title is required.'),
@@ -63,6 +66,20 @@ export function FormNewEvent() {
       })
     })
   }
+  /*  const [selectedFrameworks, setSelectedFrameworks] = useState<string[]>([
+    'react',
+    'angular',
+  ])
+  const [tags, setTags] = useState<Tag[]>([])
+  const [activeTagIndex, setActiveTagIndex] = useState<number | null>(null)
+
+  const frameworksList = [
+    { value: 'react', label: 'React', icon: Turtle },
+    { value: 'angular', label: 'Angular', icon: Cat },
+    { value: 'vue', label: 'Vue', icon: Dog },
+    { value: 'svelte', label: 'Svelte', icon: Rabbit },
+    { value: 'ember', label: 'Ember', icon: Fish },
+  ] */
 
   return (
     <>
@@ -131,12 +148,57 @@ export function FormNewEvent() {
               <FormItem>
                 <FormLabel>Date</FormLabel>
                 <FormControl>
-                  <TimePicker date={field.value} onChange={field.onChange} />
+                  <TimePicker date={new Date()} onChange={field.onChange} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
             )}
           />
+          {/* 
+          <FormField
+            control={form.control}
+            name="fecha"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Date</FormLabel>
+                <FormControl>
+                  <MultiSelect
+                    options={frameworksList}
+                    onValueChange={setSelectedFrameworks}
+                    defaultValue={selectedFrameworks}
+                    placeholder="Select frameworks"
+                    variant="inverted"
+                    maxCount={3}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="fecha"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Date</FormLabel>
+                <FormControl>
+                  <TagInput
+                    {...field}
+                    placeholder="Enter a topic"
+                    tags={tags}
+                    className="sm:min-w-[450px]"
+                    setTags={newTags => {
+                      setTags(newTags)
+                      setValue('topics', newTags as [Tag, ...Tag[]])
+                    }}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+ */}
           <FormField
             control={form.control}
             name="ubicacion"
