@@ -17,17 +17,18 @@ datasource db {
  * Usuarios
  */
 model user {
-  id            Int         @id @default(autoincrement())
+  id            Int           @id @default(autoincrement())
   firstName     String
   lastName      String
   username      String
   avatar        String
-  createAt      DateTime    @default(now())
-  updateAt      DateTime    @updatedAt
-  creadential   credentials @relation(fields: [credentialsId], references: [id])
-  credentialsId Int         @unique
+  createAt      DateTime      @default(now())
+  updateAt      DateTime      @updatedAt
+  creadential   credentials   @relation(fields: [credentialsId], references: [id])
+  credentialsId Int           @unique
   event         event[]
   interes       interes[]
+  comentarios   comentarios[]
 }
 
 model credentials {
@@ -58,6 +59,18 @@ model event {
   userId         Int?
   organizacion   organizacion?    @relation(fields: [organizacionId], references: [id])
   organizacionId Int?
+  comentarios    comentarios[]
+}
+
+model comentarios {
+  id         Int      @id @default(autoincrement())
+  comentario String
+  createAt   DateTime @default(now())
+  updateAt   DateTime @updatedAt
+  usuario    user     @relation(fields: [userId], references: [id])
+  userId     Int
+  event      event    @relation(fields: [eventId], references: [id])
+  eventId    Int
 }
 
 model tag {

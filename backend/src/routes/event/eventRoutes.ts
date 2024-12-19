@@ -81,6 +81,7 @@ router.get('/events/:id', async (req: Request, res: Response) => {
                 event_tag: { include: { tag: true } },
                 usuario: true,
                 organizacion: true,
+                comentarios: true
             },
         });
 
