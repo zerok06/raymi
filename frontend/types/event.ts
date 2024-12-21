@@ -10,6 +10,8 @@ export interface EventType {
     event_category: EventCategory[];
     event_tag: EventTag[];
     usuario?: User;
+    latitud: number
+    longitud: number
     userId?: number;
     organizacion?: Organizacion;
     organizacionId?: number;

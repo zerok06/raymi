@@ -18,6 +18,7 @@ router.post('/event', validateData(createEventSchema), async (req: Request, res:
             organizacionId,
             categories,
             tags,
+            latitud, longitud
         }: CreateEventType = req.body;
 
         const newEvent = await prisma.event.create({
@@ -26,7 +27,7 @@ router.post('/event', validateData(createEventSchema), async (req: Request, res:
                 images,
                 description,
                 fecha: new Date(fecha),
-                ubicacion,
+                ubicacion, latitud, longitud,
                 usuario: userId ? { connect: { id: userId } } : undefined,
                 organizacion: organizacionId ? { connect: { id: organizacionId } } : undefined,
                 event_category: {
@@ -68,6 +69,27 @@ router.get('/events', async (req: Request, res: Response) => {
         res.status(500).json({ error: 'Failed to fetch events' });
     }
 });
+
+/* Obtener todos los eventos de perfil */
+router.get('/events/profile', async (req: Request, res: Response) => {
+    try {
+        const events = await prisma.event.findMany({
+            include: {
+                event_category: { include: { category: true } },
+                event_tag: { include: { tag: true } },
+                usuario: true,
+                organizacion: true,
+
+            },
+        });
+
+        res.json({ events });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Failed to fetch events' });
+    }
+});
+
 
 /* Obtener un evento por ID */
 router.get('/events/:id', async (req: Request, res: Response) => {
@@ -125,7 +147,7 @@ router.put('/events/:id', validateData(updateEventSchema), async (req: Request, 
             userId,
             organizacionId,
             categories,
-            tags,
+            tags, latitud, longitud,
         }: UpdateEventType = req.body;
 
         // Actualizar el evento
@@ -136,7 +158,7 @@ router.put('/events/:id', validateData(updateEventSchema), async (req: Request, 
                 images,
                 description,
                 fecha: fecha ? new Date(fecha) : undefined,
-                ubicacion,
+                ubicacion, latitud, longitud,
                 usuario: userId ? { connect: { id: userId } } : undefined,
                 organizacion: organizacionId ? { connect: { id: organizacionId } } : undefined,
                 event_category: categories

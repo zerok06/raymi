@@ -14,7 +14,7 @@ import {
 } from '@/components/ui/sidebar'
 import Logo from './Logo'
 import Link from 'next/link'
-import { ChartBarStacked, MapPin, Tag } from 'lucide-react'
+import { ChartBarStacked, MapPin, MapPinCheck, Tag } from 'lucide-react'
 
 // This is sample data.
 const data = {
@@ -25,14 +25,15 @@ const data = {
       url: '#',
       items: [
         {
-          title: 'Installation',
+          title: 'Likes',
           icon: <Tag />,
-          url: '#',
+          url: '/home/profile/likes',
         },
         {
-          title: 'Project Structure',
-          isActive: true,
-          url: '#',
+          title: 'Mis eventos',
+          isActive: false,
+          url: '/home/profile/events',
+          icon: <MapPinCheck />,
         },
       ],
     },
@@ -42,20 +43,20 @@ const data = {
       items: [
         {
           title: 'Etiquetas',
-          url: '#',
-          isActive: true,
+          url: '/home/tags',
+          isActive: false,
           icon: <Tag />,
         },
         {
           title: 'Categorias',
-          url: '#',
-          isActive: true,
+          url: '/home/categories',
+          isActive: false,
           icon: <ChartBarStacked />,
         },
         {
           title: 'Maps',
-          url: '#',
-          isActive: true,
+          url: '/home/map',
+          isActive: false,
           icon: <MapPin />,
         },
       ],
@@ -66,8 +67,10 @@ const data = {
 export function SideBar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   return (
     <Sidebar {...props}>
-      <SidebarHeader className="pt-10">
-        <Logo />
+      <SidebarHeader className="pt-10 ">
+        <div className="flex justify-center">
+          <Logo />
+        </div>
       </SidebarHeader>
       <SidebarContent>
         {/* We create a SidebarGroup for each parent. */}

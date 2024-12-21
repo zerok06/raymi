@@ -22,6 +22,9 @@ import { TimePicker } from '../ui/datetime-picker'
 import { MultiSelect } from '../ui/multi-select'
 import { Cat, Dog, Fish, Rabbit, Turtle } from 'lucide-react'
 import { Tag, TagInput } from 'emblor'
+import useMapPicker from '@/hook/useMapPicker'
+import MapPicker from '../MapPicker'
+import { useHomeContext } from '@/context/AuthContext'
 
 const FormSchema = z.object({
   title: z.string().min(1, 'Title is required.'),
@@ -34,8 +37,6 @@ const FormSchema = z.object({
       'Please provide a valid date (YYYY-MM-DD).'
     ),
   ubicacion: z.string().min(1, 'Location is required.'),
-  organizacionId: z.string().optional(), // Puede ser opcional
-  userId: z.string().optional(), // Puede ser opcional
 })
 
 export function FormNewEvent() {
@@ -47,16 +48,16 @@ export function FormNewEvent() {
       description: '',
       fecha: '',
       ubicacion: '',
-      userId: undefined,
-      organizacionId: undefined,
     },
   })
+  const { handlePicker, picker } = useMapPicker()
+  const { email, id: idUser } = useHomeContext()
 
   const [isPending, startTransition] = useTransition()
 
   function onSubmit(data: z.infer<typeof FormSchema>) {
     startTransition(() => {
-      createEvent({ ...data, userId: Number(data.userId) }).then(res => {
+      createEvent({ ...data, userId: idUser, ...picker }).then(res => {
         console.log(res)
 
         if (res.success) {
@@ -201,6 +202,7 @@ export function FormNewEvent() {
             )}
           />
  */}
+          <MapPicker handlePicker={handlePicker} picker={picker} />
           <FormField
             control={form.control}
             name="ubicacion"
@@ -214,40 +216,7 @@ export function FormNewEvent() {
               </FormItem>
             )}
           />
-          <FormField
-            control={form.control}
-            name="userId"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>User ID</FormLabel>
-                <FormControl>
-                  <Input
-                    type="number"
-                    placeholder="Enter User ID (optional)"
-                    {...field}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="organizacionId"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Organization ID</FormLabel>
-                <FormControl>
-                  <Input
-                    type="number"
-                    placeholder="Enter organization ID (optional)"
-                    {...field}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+
           <Separator />
           <Button disabled={isPending} className="w-full" type="submit">
             Create Event
