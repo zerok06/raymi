@@ -1,4 +1,3 @@
-import Wrapper from '@/components/Wrapper'
 import { EventType } from '@/types/event'
 import Link from 'next/link'
 import React from 'react'
@@ -12,7 +11,6 @@ const Page = async () => {
     <>
       <nav className="h-10">Filters</nav>
       <h1>Home</h1>
-
       <section className="flex flex-wrap gap-6">
         {events.map(item => (
           <Link

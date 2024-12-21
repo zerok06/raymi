@@ -13,6 +13,12 @@ export interface EventType {
     userId?: number;
     organizacion?: Organizacion;
     organizacionId?: number;
+    comentarios: Comentario[];
+    _count: {
+        likes: number;
+        comentarios: number;
+    },
+    likes: Like[];
 }
 
 export interface Tag {
@@ -50,7 +56,9 @@ export interface EventTag {
 
 export interface User {
     id: number;
-    name: string;
+    firstName: string;
+    lastName: string;
+    username: string;
     email: string;
     events: Event[];
 }
@@ -59,4 +67,23 @@ export interface Organizacion {
     id: number;
     name: string;
     events: Event[];
+}
+
+export interface Comentario {
+    id: number;
+    comentario: string;
+    createAt: Date;
+    updateAt: Date;
+    usuario: User;
+    userId: number;
+    event: Event;
+    eventId: number;
+}
+
+export interface Like {
+    id: number;
+    user: User;
+    userId: number;
+    event: Event;
+    eventId: number;
 }

@@ -6,7 +6,6 @@ import type { CreateEventType, UpdateEventType } from './eventSchema'; // Define
 
 const router: Router = Router();
 
-/* Crear un evento */
 router.post('/event', validateData(createEventSchema), async (req: Request, res: Response) => {
     try {
         const {
@@ -59,6 +58,7 @@ router.get('/events', async (req: Request, res: Response) => {
                 event_tag: { include: { tag: true } },
                 usuario: true,
                 organizacion: true,
+
             },
         });
 
@@ -81,8 +81,23 @@ router.get('/events/:id', async (req: Request, res: Response) => {
                 event_tag: { include: { tag: true } },
                 usuario: true,
                 organizacion: true,
-                comentarios: true
+                comentarios: {
+                    include: {
+                        usuario: true,
+                    },
+                    orderBy: {
+                        createAt: 'desc',
+                    }
+                }
+                , likes: {
+                    take: 3,
+
+                },
+                _count: {
+                    select: { likes: true, comentarios: true }
+                }
             },
+
         });
 
         if (!event) {

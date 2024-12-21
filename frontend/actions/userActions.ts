@@ -32,7 +32,7 @@ export const signIn = async (formData: any) => {
     const response = await fetching.json()
 
     if (response.success) {
-        (await cookies()).set('token', response.token, { path: '/' })
+        (await cookies()).set('token', response.token, { path: '/' }).set("id", response.data.id, { path: '/' }).set("email", response.data.email, { path: '/' })
     }
 
     return response

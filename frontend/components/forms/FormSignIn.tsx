@@ -51,6 +51,11 @@ export function FormSignIn() {
             description: res.msg,
           })
           redirect('/home')
+        } else {
+          toast({
+            title: 'Error',
+            description: res.msg,
+          })
         }
       })
     })

@@ -29,6 +29,7 @@ model user {
   event         event[]
   interes       interes[]
   comentarios   comentarios[]
+  likes         likes[]
 }
 
 model credentials {
@@ -60,6 +61,15 @@ model event {
   organizacion   organizacion?    @relation(fields: [organizacionId], references: [id])
   organizacionId Int?
   comentarios    comentarios[]
+  likes          likes[]
+}
+
+model likes {
+  id      Int   @id @default(autoincrement())
+  usuario user  @relation(fields: [userId], references: [id])
+  userId  Int
+  event   event @relation(fields: [eventId], references: [id])
+  eventId Int
 }
 
 model comentarios {

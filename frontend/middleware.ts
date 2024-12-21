@@ -4,7 +4,6 @@ import type { NextFetchEvent, NextRequest } from 'next/server'
 export async function middleware(req: NextRequest, event: NextFetchEvent) {
     try {
         const token = req.cookies.get('token');
-        console.log(token);
 
         if (!token) {
             return NextResponse.redirect(new URL('/signin', req.url));
@@ -17,21 +16,21 @@ export async function middleware(req: NextRequest, event: NextFetchEvent) {
             },
             body: JSON.stringify({ token }),
         });
+        console.log(response);
 
         if (!response.ok) {
-            return NextResponse.redirect('/signin');
+            return NextResponse.redirect(new URL('/signin', req.url));
         }
-        console.log('middleware');
 
         const data = await response.json();
 
         if (!data.valid) {
-            return NextResponse.redirect('/signin');
+            return NextResponse.redirect(new URL('/signin', req.url));
         }
 
         return NextResponse.next();
     } catch (error) {
-        return NextResponse.error();
+        return NextResponse.redirect(new URL('/signin', req.url));
     }
 }
 

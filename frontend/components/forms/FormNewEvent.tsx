@@ -34,7 +34,8 @@ const FormSchema = z.object({
       'Please provide a valid date (YYYY-MM-DD).'
     ),
   ubicacion: z.string().min(1, 'Location is required.'),
-  organizacionId: z.number().optional(), // Puede ser opcional
+  organizacionId: z.string().optional(), // Puede ser opcional
+  userId: z.string().optional(), // Puede ser opcional
 })
 
 export function FormNewEvent() {
@@ -46,6 +47,7 @@ export function FormNewEvent() {
       description: '',
       fecha: '',
       ubicacion: '',
+      userId: undefined,
       organizacionId: undefined,
     },
   })
@@ -54,7 +56,7 @@ export function FormNewEvent() {
 
   function onSubmit(data: z.infer<typeof FormSchema>) {
     startTransition(() => {
-      createEvent(data).then(res => {
+      createEvent({ ...data, userId: Number(data.userId) }).then(res => {
         console.log(res)
 
         if (res.success) {
@@ -207,6 +209,23 @@ export function FormNewEvent() {
                 <FormLabel>Location</FormLabel>
                 <FormControl>
                   <Input placeholder="Enter event location" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="userId"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>User ID</FormLabel>
+                <FormControl>
+                  <Input
+                    type="number"
+                    placeholder="Enter User ID (optional)"
+                    {...field}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>

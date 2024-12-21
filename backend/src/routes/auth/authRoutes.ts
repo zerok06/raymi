@@ -54,10 +54,9 @@ router.post('/signin', validateData(signIn), async (req: Request, res: Response)
       .setExpirationTime(process.env.JWT_EXPIRATION_TIME ?? '1h')
       .sign(secret_key)
 
-    console.log(token);
 
 
-    res.json({ msg: 'Sign in successfully', success: true, token })
+    res.json({ msg: 'Sign in successfully', success: true, token, data: { email: existUser?.creadential?.email, id: existUser?.id } })
 
   } catch (error) {
     res.json({ error, success: false })
@@ -68,7 +67,6 @@ router.post('/signin', validateData(signIn), async (req: Request, res: Response)
 /* Sign up */
 
 router.post('/signup', validateData(signUp), async (req: Request, res: Response) => {
-  console.log(req.body);
 
   try {
     const { email, firstName, lastName, username, password }: signUpType = req.body
@@ -125,14 +123,14 @@ router.post('/signup', validateData(signUp), async (req: Request, res: Response)
 })
 
 router.post('/validate-token', async (req: Request, res: Response) => {
-  const { token } = req.body;
-
-  if (!token) {
-    res.status(400).json({ msg: 'Token is required', valid: false });
-    return
-  }
 
   try {
+    const { token } = req.body;
+
+    if (!token) {
+      res.status(400).json({ msg: 'Token is required', valid: false });
+      return
+    }
     console.log(token);
 
     const secret = new TextEncoder().encode(process.env.JWT_SECRET_KEY!); // Reemplaza 'your-secret-key' con tu clave secreta
